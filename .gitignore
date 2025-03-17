@@ -1,0 +1,47 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.env
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Data files
+data/*.csv
+data/kddcup99_train.csv
+data/kddcup99_test.csv
+
+# Model files
+models/*.pkl
+models/intrusion_detection_model.pkl
+models/preprocessing_pipeline.pkl
+
+# Log files
+logs/*.log
+
+# Plot images
+models/plots/*.png
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# TensorFlow cache
+.tensorflow/
