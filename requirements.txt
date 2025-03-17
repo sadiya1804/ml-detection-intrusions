@@ -1,9 +1,1 @@
-pandas
-numpy
-scikit-learn
-matplotlib
-seaborn
-tensorflow
-tensorflow-datasets
-joblib
-flask
+
