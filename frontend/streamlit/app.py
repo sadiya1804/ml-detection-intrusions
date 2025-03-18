@@ -332,7 +332,7 @@ if start_button and not filtered_data.empty:
                 protocol_df = protocol_series.value_counts().reset_index()
                 protocol_df.columns = ['Protocol', 'Count']
                 # Create the bar chart
-                st.bar_chart(protocol_df, x='Protocol', y='Count',  key=f"protocol_chart_{i}")
+                st.bar_chart(protocol_df, x='Protocol', y='Count')
             else:
                 st.info("No connection data available for protocol distribution")
         
