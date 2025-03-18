@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 import plotly.graph_objects as go
 
 # API endpoint
-API_URL = "http://localhost:8000"
+API_URL = "http://backend:8000"
 
 # Page config
 st.set_page_config(
@@ -80,7 +80,7 @@ def load_sample_data():
               'dst_host_srv_rerror_rate', 'label']
     
     try:
-        df = pd.read_csv("../data/kddcup.data_10_percent", names=columns, nrows=1000)
+        df = pd.read_csv("./data/kddcup.data_10_percent", names=columns, nrows=1000)
         return df
     except:
         st.error("Error loading data. Please make sure the dataset is available.")

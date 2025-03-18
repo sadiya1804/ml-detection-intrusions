@@ -1,20 +1,30 @@
-# Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
-
-# Install any needed packages specified in requirements.txt
+# Installer les dépendances
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Set the working directory to backend/api
-WORKDIR /app/backend/api
+# Copier les dossiers nécessaires (ajoute "data")
+COPY ml ./ml
+COPY api ./api
+COPY data ./data
+COPY data/kddcup.data_10_percent ./data/kddcup.data_10_percent
+COPY models ./models
+COPY models/intrusion_model.pkl ./models/intrusion_model.pkl
+COPY models/intrusion_preprocessor.pkl ./models/intrusion_preprocessor.pkl
+COPY scripts ./scripts
 
-# Make port 80 available to the world outside this container
+
+# Créer explicitement le dossier "models"
+RUN mkdir -p models
+
+# Définir PYTHONPATH
+ENV PYTHONPATH=/app
+
+# Exposer le port
 EXPOSE 8000
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Lancer l'application
+CMD ["python", "api/app.py"]

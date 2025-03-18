@@ -38,16 +38,16 @@ detector = IntrusionDetector()
 async def startup_event():
     try:
         # Check if model exists, if not train it
-        if not (os.path.exists('../models/intrusion_model.pkl') and 
-                os.path.exists('../models/intrusion_preprocessor.pkl')):
+        if not (os.path.exists('./models/intrusion_model.pkl') and 
+                os.path.exists('./models/intrusion_preprocessor.pkl')):
             logger.info("Training new model...")
-            detector.train('../data/kddcup.data_10_percent')
-            detector.save_model('../models/intrusion_model.pkl', 
-                               '../models/intrusion_preprocessor.pkl')
+            detector.train('./data/kddcup.data_10_percent')
+            detector.save_model('./models/intrusion_model.pkl', 
+                               './models/intrusion_preprocessor.pkl')
         else:
             logger.info("Loading existing model...")
-            detector.load_model('../models/intrusion_model.pkl', 
-                               '../models/intrusion_preprocessor.pkl')
+            detector.load_model('./models/intrusion_model.pkl', 
+                               './models/intrusion_preprocessor.pkl')
     except Exception as e:
         logger.error(f"Error during startup: {str(e)}")
         raise
