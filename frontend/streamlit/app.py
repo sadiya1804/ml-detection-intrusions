@@ -178,7 +178,7 @@ if start_button and not filtered_data.empty:
             else:
                 st.info("No alerts detected yet")
         
-       # Update statistics
+      # Update statistics
         with stats_placeholder:
             total = len(connections)
             anomaly_count = sum(anomalies)
@@ -187,26 +187,14 @@ if start_button and not filtered_data.empty:
             anomaly_percentage = (anomaly_count/total*100) if total > 0 else 0
             
             # Create metrics in columns
-            col1, col2, col3 = st.columns(3)
+            col1, col2 = st.columns(2)
             col1.metric("Total Connections", total)
-            col2.metric("Anomalies Detected", anomaly_count)
-            col3.metric("Anomaly Percentage", f"{anomaly_percentage:.2f}%")
+            col2.metric("Anomalies Detected", anomaly_count, 
+                    f"{anomaly_percentage:.1f}%" if total > 0 else "0%")
             
-            # Add a pie chart to visualize normal vs abnormal distribution
-            if connections:
-                # Create data for pie chart
-                labels = ['Normal', 'Anomaly']
-                values = [total - anomaly_count, anomaly_count]
-                
-                # Create pie chart with Plotly
-                fig = px.pie(
-                    values=values, 
-                    names=labels,
-                    title='Connection Types Distribution',
-                    color=labels,
-                    color_discrete_map={'Normal': 'green', 'Anomaly': 'red'}
-                )
-                st.plotly_chart(fig, use_container_width=True)
+            # Add progress bar to show anomaly percentage
+            st.subheader(f"Anomaly Percentage: {anomaly_percentage:.2f}%")
+            st.progress(anomaly_percentage/100)
             
             # Protocol distribution - FIXED VERSION
             if connections:
@@ -219,10 +207,9 @@ if start_button and not filtered_data.empty:
                 st.bar_chart(protocol_df, x='Protocol', y='Count')
             else:
                 st.info("No connection data available for protocol distribution")
-
-        
-        # Pause for simulation speed
-        time.sleep(1.0 / speed)
+                
+                # Pause for simulation speed
+                time.sleep(1.0 / speed)
     
     # Simulation complete
     st.success("Simulation complete!")
