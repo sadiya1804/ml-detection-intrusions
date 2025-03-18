@@ -1,4 +1,3 @@
-# backend/api/app.py
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
@@ -62,20 +61,48 @@ def predict_intrusion(connection_data: dict):
         # Convert input data to DataFrame
         df = pd.DataFrame([connection_data])
         
+        # Log the incoming connection
+        logger.info(f"Analyzing connection: {connection_data['protocol_type']} - {connection_data['service']}")
+        
         # Make prediction
         result = detector.predict(df)
         
+        # Get the raw prediction and probabilities
+        raw_prediction = result['prediction'][0]
+        probabilities = result['probabilities'][0]
+        anomaly_score = result['anomaly_score'][0]
+        
+        # Use a lower threshold for attack detection
+        # If normal probability is less than 90%, consider it suspicious
+        normal_idx = list(detector.model.classes_).index('normal.')
+        normal_prob = probabilities[normal_idx]
+        
+        # If normal probability is below threshold, find the most likely attack
+        if normal_prob < 0.90:
+            # Find the attack class with highest probability
+            attack_probs = [(cls, prob) for i, (cls, prob) in 
+                           enumerate(zip(detector.model.classes_, probabilities)) 
+                           if cls != 'normal.']
+            most_likely_attack = max(attack_probs, key=lambda x: x[1])
+            adjusted_prediction = most_likely_attack[0]
+            logger.info(f"Adjusted prediction: {adjusted_prediction} (normal prob: {normal_prob:.4f})")
+        else:
+            adjusted_prediction = raw_prediction
+        
         # Log the prediction
-        logger.info(f"Prediction made: {result['prediction'][0]}")
+        logger.info(f"Prediction made: {raw_prediction}, Score: {anomaly_score:.4f}")
         
         return {
-            "prediction": result['prediction'][0],
-            "anomaly_score": result['anomaly_score'][0],
-            "probabilities": result['probabilities'][0]
+            "prediction": adjusted_prediction,
+            "raw_prediction": raw_prediction,
+            "anomaly_score": anomaly_score,
+            "probabilities": probabilities,
+            "normal_probability": normal_prob
         }
     except Exception as e:
         logger.error(f"Prediction error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/health")
 def health_check():
