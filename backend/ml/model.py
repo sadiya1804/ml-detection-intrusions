@@ -57,11 +57,30 @@ class IntrusionDetector:
         prediction = self.model.predict(X_transformed)
         probabilities = self.model.predict_proba(X_transformed)
         
+        # Get prediction confidence
+        max_probs = np.max(probabilities, axis=1)
+        
+        # Log detailed prediction information
+        print(f"Debug - Prediction: {prediction}")
+        print(f"Debug - Probabilities shape: {probabilities.shape}")
+        print(f"Debug - Top class probabilities: {max_probs}")
+        
+        # Get the top 3 classes with their probabilities
+        top_classes = []
+        for i, probs in enumerate(probabilities):
+            class_probs = [(self.model.classes_[j], prob) for j, prob in enumerate(probs)]
+            sorted_probs = sorted(class_probs, key=lambda x: x[1], reverse=True)[:3]
+            top_classes.append(sorted_probs)
+        
+        print(f"Debug - Top 3 classes: {top_classes}")
+        
         return {
             'prediction': prediction.tolist(),
             'probabilities': probabilities.tolist(),
-            'anomaly_score': np.max(probabilities, axis=1).tolist()
+            'anomaly_score': max_probs.tolist(),
+            'top_classes': [[cls, float(prob)] for cls_list in top_classes for cls, prob in cls_list]
         }
+
     
     def save_model(self, model_path, preprocessor_path):
         """Save the trained model and preprocessor"""
