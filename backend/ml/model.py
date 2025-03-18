@@ -1,4 +1,3 @@
-# backend/ml/model.py
 import joblib
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
@@ -78,7 +77,6 @@ class IntrusionDetector:
         self.preprocessor = joblib.load(preprocessor_path)
 
 if __name__ == "__main__":
-    # Example usage
     detector = IntrusionDetector()
     results = detector.train('../data/kddcup.data_10_percent')
     print(f"Model accuracy: {results['accuracy']:.4f}")
