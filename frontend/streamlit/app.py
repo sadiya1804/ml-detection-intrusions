@@ -1,4 +1,3 @@
-# frontend/app.py
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -65,7 +64,6 @@ search_term = st.sidebar.text_input("Search for specific events",
 # Load sample data
 @st.cache_data
 def load_sample_data():
-    # This would be replaced with your actual data loading logic
     columns = ['duration', 'protocol_type', 'service', 'flag', 'src_bytes', 
               'dst_bytes', 'land', 'wrong_fragment', 'urgent', 'hot', 
               'num_failed_logins', 'logged_in', 'num_compromised', 'root_shell', 
@@ -130,7 +128,7 @@ if start_button and not filtered_data.empty:
     connections = []
     anomalies = []
     alerts = []
-    timestamps = []  # Add this to track when each connection occurred
+    timestamps = []  # track when each connection occurred
     
     # Create a progress bar
     progress_bar = st.progress(0)
@@ -249,7 +247,7 @@ if start_button and not filtered_data.empty:
                     )
                 )
                 
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, use_container_width=True,key=f"traffic_chart_{i}")
             else:
                 st.info("No data available for the selected filters")
         
@@ -274,7 +272,8 @@ if start_button and not filtered_data.empty:
                         lambda x: ['background-color: #ffcccc' if x['anomaly'] else '' for _ in x],
                         axis=1
                     ),
-                    height=300
+                    height=300,
+                    key=f"connection_details_{i}"
                 )
             else:
                 st.info("No connections match your filters")
@@ -301,7 +300,7 @@ if start_button and not filtered_data.empty:
                 
                 if filtered_alerts:
                     alert_df = pd.DataFrame(filtered_alerts)
-                    st.dataframe(alert_df, height=300)
+                    st.dataframe(alert_df, height=300,  key=f"alerts_{i}")
                 else:
                     st.info("No alerts match your filters")
             else:
@@ -325,7 +324,7 @@ if start_button and not filtered_data.empty:
             st.subheader(f"Anomaly Percentage: {anomaly_percentage:.2f}%")
             st.progress(anomaly_percentage/100)
             
-            # Protocol distribution - FIXED VERSION
+            # Protocol distribution
             if filtered_connections:
                 # Create a Series of protocol types
                 protocol_series = pd.Series([c['protocol_type'] for c in filtered_connections])
@@ -333,7 +332,7 @@ if start_button and not filtered_data.empty:
                 protocol_df = protocol_series.value_counts().reset_index()
                 protocol_df.columns = ['Protocol', 'Count']
                 # Create the bar chart
-                st.bar_chart(protocol_df, x='Protocol', y='Count')
+                st.bar_chart(protocol_df, x='Protocol', y='Count',  key=f"protocol_chart_{i}")
             else:
                 st.info("No connection data available for protocol distribution")
         

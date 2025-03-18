@@ -1,4 +1,3 @@
-# backend/data/preprocess.py
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -51,6 +50,5 @@ def load_and_preprocess_data(filepath):
     return preprocessor, X, y
 
 if __name__ == "__main__":
-    # Example usage
     preprocessor, X, y = load_and_preprocess_data('../data/kddcup.data_10_percent')
     print(f"Data loaded: {X.shape} features, {len(np.unique(y))} classes")
