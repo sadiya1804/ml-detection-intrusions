@@ -208,6 +208,8 @@ ml-detection-intrusions/
 ├── frontend/
 │   ├── streamlit/
 │   │   └── app.py
+│   │   └── simulation.py
+|   |   └── test_mode.py
 │   └── requirements.txt
 ├── data/
 │   └── kddcup.data_10_percent
